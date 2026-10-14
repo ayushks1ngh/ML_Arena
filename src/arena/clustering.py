@@ -96,6 +96,8 @@ def stability(X, selected, seeds=SEEDS):
 def run_all(seeds=SEEDS):
     raws, sels, stabs = [], [], []
     labels_df = load_mall()[["CustomerID"]].copy()
+    X3 = get_X("3d")          # standardized coordinates are stored so the dashboard needs no raw Mall file
+    labels_df["Income_z"], labels_df["Spending_z"], labels_df["Age_z"] = X3[:, 0], X3[:, 1], X3[:, 2]
     for variant in ("2d", "3d"):
         raw, sel, labels, X = run_arena(variant, seeds)
         raws.append(raw); sels.append(sel); stabs.append(stability(X, sel, seeds))

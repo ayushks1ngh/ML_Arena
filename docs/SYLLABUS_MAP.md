@@ -30,7 +30,7 @@ Rule: benchmark-able algorithms go in the **main platform**; concepts that are n
 | G | **Single linkage calculations** | 5–6 points distance matrix; step-by-step merges by hand (min-distance update rule), verify with `scipy.cluster.hierarchy.linkage`, dendrogram; chaining effect demo; link to Mall results | notebook |
 
 ## C. Coverage checklist (tick as finished; each must have executed outputs)
-- [ ] ID3  - [ ] kNN  - [ ] Nearest Centroid  - [ ] ANN  - [ ] Random Forest  - [ ] AdaBoost  - [ ] XGBoost (clf)
-- [ ] Linear/DT/RF/GB/XGB regression  - [ ] K-means  - [ ] Mean Shift  - [ ] Single linkage  - [ ] DBSCAN
-- [ ] Lab A regression types  - [ ] Lab B activations  - [ ] Lab C ML/MAP  - [ ] Lab D NAND perceptron
-- [ ] Lab E Q-learning  - [ ] Lab F Manhattan/Chebyshev  - [ ] Lab G single linkage
+- [x] ID3  - [x] kNN  - [x] Nearest Centroid  - [x] ANN  - [x] Random Forest  - [x] AdaBoost  - [x] XGBoost (clf)
+- [x] Linear/DT/RF/GB/XGB regression  - [x] K-means  - [x] Mean Shift  - [x] Single linkage  - [x] DBSCAN
+- [x] Lab A regression types  - [x] Lab B activations  - [x] Lab C ML/MAP  - [x] Lab D NAND perceptron
+- [x] Lab E Q-learning  - [x] Lab F Manhattan/Chebyshev  - [x] Lab G single linkage
