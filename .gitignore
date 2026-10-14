@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Credentials: never commit
+kaggle.json
+.env
+
+# Kaggle data is downloaded by script, not redistributed
+data/raw/
+data/processed/
