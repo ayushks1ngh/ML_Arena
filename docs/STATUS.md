@@ -2,14 +2,14 @@
 
 **Last updated:** 2026-10-15
 **Mode:** AUTONOMOUS (user approved plan + told me to run Days 1-7 without confirmation).
-**Current phase:** Day 1 done (Gate 1 passed). **Next action:** Day 2 (all classifiers + regressors, summarize.py, leaderboards).
+**Current phase:** Day 2 done (Gate 2 passed). **Next action:** Day 3 (perturb.py, robustness.py, clustering.py, notebooks 04/05).
 
 ## Phase checklist
 - [x] Repo scaffold (README, .gitignore, initial PLAN)
 - [x] Planning docs: CLAUDE.md, PRD, PLAN, EXPERIMENT_DESIGN, ARCHITECTURE, DATASETS, SYLLABUS_MAP, ACCEPTANCE_CRITERIA, RISKS, STATUS, VIVA_PREP (seed)
 - [x] **Plan approved by user** (autonomous mode)
 - [x] Day 1 — Setup, data, skeleton (Gate 1: 5 tests pass; quick run wrote results/raw/clf_baseline_quick.csv)
-- [ ] Day 2 — Leaderboards clf + reg (Gate 2)
+- [x] Day 2 — Leaderboards clf + reg (Gate 2: 8 clf models (ID3 added Day 4) + 6 reg models x 5 seeds, all beat dummy, 6 tests pass)
 - [ ] Day 3 — Robustness engine + clustering (Gate 3)
 - [ ] Day 4 — Imbalance, failures, ID3, quick labs (Gate 4)
 - [ ] Day 5 — Dashboard + remaining labs (Gate 5)
@@ -40,3 +40,4 @@
 ## Session handoff log
 - 2026-10-15: Planning docs created. Nothing implemented. Resume by reading `CLAUDE.md` → this file → `PLAN.md`.
 - 2026-10-15 (Day 1): Kaggle API worked (titanic comp + vjchoudhary7/customer-segmentation-tutorial-in-python). Data in data/raw/ (gitignored). Titanic 891x12, Mall 200x5, California 20640x8 all verified. Deps pinned in requirements.txt (pandas 3.0, sklearn 1.9, xgboost 3.4). Built config/data/preprocess/models/evaluate + check_env + run_classification + notebook 01 + tests. Design: GridSearchCV over full Pipeline(pre, est) then split fitted steps, so tuning is leak-free and perturbation can act between pre and est. Mall licence still to check (Day 6 report).
+- 2026-10-15 (Day 2): added knn/nc/ann/ada/xgb + reg models, runner.py, summarize.py, viz.py, notebooks 02/03 (executed), seed-0 predictions saved. Full runs: clf ~2 min, reg ~10 min. Measured: clf macro-F1 best=xgb 0.834+-0.017 (rf, dt tie within 1 std); reg RMSE best=xgb 0.449 (gb 0.465, rf 0.503). Quick-run outputs are gitignored.

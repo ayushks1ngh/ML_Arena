@@ -40,3 +40,16 @@ def test_run_one_quick_beats_dummy():
     d = run_one("clf", "dummy", 0, quick=True).metrics["accuracy"]
     r = run_one("clf", "rf", 0, quick=True).metrics["accuracy"]
     assert r > d
+
+
+def test_leaderboard_rank_and_tie():
+    import pandas as pd
+    from arena.summarize import leaderboard
+    rows = []
+    for model, vals in {"a": [0.80, 0.82], "b": [0.79, 0.81], "c": [0.50, 0.52]}.items():
+        for seed, v in enumerate(vals):
+            rows.append(dict(model=model, metric="accuracy", seed=seed, value=v, fit_time_s=0.1))
+            rows.append(dict(model=model, metric="rmse", seed=seed, value=1 - v, fit_time_s=0.1))
+    lb = leaderboard(pd.DataFrame(rows)).set_index(["metric", "model"])
+    assert lb.loc[("accuracy", "a"), "rank"] == 1 and lb.loc[("rmse", "a"), "rank"] == 1  # lower rmse is better
+    assert lb.loc[("accuracy", "b"), "tie_with_best"] and not lb.loc[("accuracy", "c"), "tie_with_best"]

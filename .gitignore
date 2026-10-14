@@ -12,3 +12,4 @@ kaggle.json
 # Kaggle data is downloaded by script, not redistributed
 data/raw/
 data/processed/
+results/**/*_quick.csv

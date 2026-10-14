@@ -42,3 +42,10 @@ Rules: answers here that cite numbers must be filled in from real results only (
 - Is 5 seeds enough? Why no statistical test? (small n; paired comparisons/ties; limitation)
 - Why not retrain under test-time noise? (we measure deployed-model robustness; noise-aware training is future work)
 - What would you do with more time? (noise-augmented training, more datasets, calibration, formal significance tests)
+
+## F. Added after Day 2 (real numbers from results/summary/leaderboard_*.csv)
+**Q: Which classifier won on Titanic and is it a clear win?** XGBoost had the best macro-F1 (0.834 +- 0.017 over 5 seeds), but RF (0.828) and the decision tree (0.825) are within one std, so we call those ties, not wins.
+**Q: Which regressor won on California Housing?** XGBoost RMSE 0.449 (x $100k), then gradient boosting 0.465, random forest 0.503, tree 0.598, linear 0.729; the dummy (predict the mean) is 1.148. Gaps here exceed the std (~0.005-0.014), so the ordering is reliable.
+**Q: How did you tune without leaking?** `GridSearchCV` wraps the whole `Pipeline(preprocessor, estimator)`, so within each inner fold the imputer/scaler are refit on that fold's training part only.
+**Q: Why is the Dummy model in the table?** A sanity floor: any real model must beat predicting the majority class / mean.
+**Q: Why does Nearest Centroid do worst among real classifiers?** It models each class by a single mean point (linear-ish boundary), too simple for Titanic's interactions (Sex x Pclass).
