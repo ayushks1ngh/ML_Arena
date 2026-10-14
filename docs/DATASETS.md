@@ -25,3 +25,10 @@
 ## 4. Preparation outputs
 - `notebooks/01_data_and_preprocessing.ipynb`: shape, dtypes, missingness, target distribution, correlations, chosen features, rationale.
 - Each loader returns raw (unprocessed) frames; all fitting happens in `preprocess.py` inside the train-only pipeline.
+
+## 5. Verification results (executed, 2026-10-15)
+| Dataset | Verified | Still open |
+|---|---|---|
+| Titanic | Downloaded with the Kaggle API (`-c titanic`): `train.csv` 891 × 12, survival 38.4%, missing: Age 177, Cabin 687, Embarked 2 | Competition rules apply: raw files are gitignored, not redistributed |
+| California Housing | scikit-learn loader: 20,640 × 8 features + target; target max 5.00001 (cap); 4.8% of houses sit at the cap | none |
+| Mall Customers | Kaggle `vjchoudhary7/customer-segmentation-tutorial-in-python`: 200 × 5, no missing values | **Licence not retrievable via the Kaggle API** (metadata empty): treated as unverified; raw file gitignored; `results/predictions/clustering_labels.csv` keeps only standardized coordinates. Check the dataset page before publishing the repo |

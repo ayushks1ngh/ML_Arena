@@ -102,3 +102,13 @@ All under `results/`:
 - `summary/robustness_summary_{clf,reg}.csv`: model, family, mean_rel_change, auc_norm, worst_drop, rank_flips, kendall_tau
 - `predictions/*.csv`, `figures/*.png`
 Raw files are produced by scripts; summaries are derived by `src/arena/summarize.py` so figures/tables are always regenerable.
+
+## 10. Implementation notes and deviations (as built)
+- Perturbation order: refit with the tuned `best_params` (no re-tuning); refit baselines reproduce the tuned scores exactly (checked, max diff 0.0).
+- `drop_feature` removes a whole original feature (all its one-hot columns); ranking = grouped permutation importance of the seed's Random Forest on 2,000 train rows.
+- ID3 and its twin `dt_disc` (sklearn entropy tree on the same discretized features) are in the classification arena only; excluded from robustness (noise on integer categories is undefined).
+- Imbalance family has a second variant `imbalance_matched` (test set skewed like the train set) added after the first H4 result; H4 is judged under both protocols.
+- Imbalance levels are minority shares of the *training* set {0.20, 0.10, 0.05}; the original (~0.38) is the baseline.
+- Clustering selection: max silhouette; DBSCAN limited to <= 30% noise; stability holds selected parameters fixed (bandwidth/eps are not re-estimated on noisy data).
+- Quick mode (`run_all.py --quick`): 2 seeds, first value of every grid (no tuning), writes to `results_quick/`.
+- Hypothesis verdicts are computed by `src/arena/hypotheses.py`; the H1 rule counts a change as "clear" when the gap to the old winner exceeds the new winner's seed std.

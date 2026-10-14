@@ -48,7 +48,7 @@ XGBoost has the best mean on every headline metric, but Random Forest and the De
 | Linear Regression | 0.729 ± 0.004 | 0.533 ± 0.003 | 0.596 ± 0.003 |
 | Dummy (mean) | 1.148 ± 0.008 | 0.908 | 0.000 |
 
-Here the gaps exceed the std: XGBoost > Gradient Boosting > Random Forest > Tree > Linear is a reliable ordering. XGBoost also trains ~20× faster than scikit-learn Gradient Boosting (2.7 s vs 51.6 s including tuning).
+Here the gaps exceed the std: XGBoost > Gradient Boosting > Random Forest > Tree > Linear is a reliable ordering. XGBoost also trains more than 20× faster than scikit-learn Gradient Boosting (2.1 s vs 51.2 s per model including tuning, final full run).
 
 ### Clustering (Mall Customers; no ground truth)
 | Algorithm (2d features) | Selected setting | Clusters | Noise | Silhouette | ARI vs clean at σ = 0.1 / 0.25 / 0.5 |
@@ -103,7 +103,7 @@ Accuracy is a trap exactly when the test distribution is as skewed as the traini
 ## 7. Accuracy, stability and complexity
 - The most accurate models are not the most stable under feature perturbation: XGBoost wins clean data but has the worst mean change under missing values (-0.072) and noise (-0.047) among classifiers, and Gradient Boosting/XGBoost degrade most under noise on the regression task.
 - Complexity (ordinal 1-5) is not a reliable guide on Titanic (ρ = -0.22) but on California the most complex models lose most (ρ = -0.97 with 5 models).
-- Cost: XGBoost is both the most accurate and one of the cheapest to train; scikit-learn Gradient Boosting is ~20× slower with similar accuracy on California.
+- Cost: XGBoost is both the most accurate and one of the cheapest to train; scikit-learn Gradient Boosting is more than 20× slower and slightly less accurate on California.
 - Practical reading: choose by the **worst case you expect**. If inputs may be noisy or incomplete, Random Forest was the most consistently strong classifier in our runs (top-1 under missing values and moderate noise) even though XGBoost leads on clean data.
 
 ## 8. Limitations

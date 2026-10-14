@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-10-15
 **Mode:** AUTONOMOUS (user approved plan + told me to run Days 1-7 without confirmation).
-**Current phase:** Day 6 done (Gate 6 passed). **Next action:** Day 7 (full run_all.py rerun + reproducibility diff, regenerate/refresh notebooks, final acceptance pass).
+**Current phase:** ALL DAYS COMPLETE (Day 7 done). Project finished; only the user's own walkthrough of the code/viva material remains. **Next action:** none required; optional: dashboard screenshots, verify Mall licence on Kaggle page, wider tuning grids.
 
 ## Phase checklist
 - [x] Repo scaffold (README, .gitignore, initial PLAN)
@@ -14,7 +14,7 @@
 - [x] Day 4 — Imbalance, failures, ID3, quick labs (Gate 4: 15 tests pass; ID3 PlayTennis gain(Outlook)=0.2467; hypotheses.csv has H1-H6 verdicts)
 - [x] Day 5 — Dashboard + remaining labs (Gate 5: 24 tests pass incl. AppTest on all 6 pages + widget walk; server HTTP 200; all 7 labs executed; screenshots SKIPPED - no browser available)
 - [x] Day 6 — README, REPORT, viva, fresh-clone test (Gate 6: fresh clone + new venv + pip install -r requirements.txt + run_all --quick (80 s) + 24 tests all pass; VIVA_PREP has 44 Q&A)
-- [ ] Day 7 — Buffer, full run, final polish
+- [x] Day 7 — Buffer, full run, final polish (full run 554 s; results reproduce to 1e-9; notebooks re-executed; acceptance criteria ticked)
 
 ## Decision log
 | Date | Decision | Why |
@@ -45,3 +45,4 @@
 - 2026-10-15 (Day 4): added ID3 (src/arena/id3.py) + Discretizer; `id3` and `dt_disc` (sklearn entropy tree on the same discretized features) are in the clf arena but EXCLUDED from robustness (noise on integer categories is undefined). Reran clf baseline: other models' numbers unchanged (max diff 0). Added robustness family `imbalance_matched` (test set skewed like train) because H4 was Not supported under balanced test: accuracy falls too. Under matched skew accuracy rises 6-9 pts while minority recall falls 30-70 pts, so H4 Supported only in that protocol (report both). Verdicts (hypotheses.csv): H1 Supported (clf+reg; xgb baseline winner displaced, rf mostly), H2 Not supported, H3 Not supported (NC/kNN among least affected), H5 clf Supported / reg Not supported (rho=-0.97, n=5), H6 Supported. failures.py wrote failures_*.csv + tradeoff_*.csv. Notebooks 06, 07, labs D/F/G executed. Doc fix: PlayTennis gain(Outlook)=0.247 (not 0.246).
 - 2026-10-15 (Day 5): app/ (Home + 5 pages, Plotly, reads CSVs only, friendly missing-file message). Labs A, B, C, E executed. Honest corrections made after checking outputs: Lab A polynomial demo uses 30 training rows (else no overfitting visible); Lab B reports both early_stopping settings (sigmoid MLP underfits with early stopping: 0.655 acc vs ~0.83 without); Lab E hand-worked update uses state (3,2). Mall licence: Kaggle API metadata returned none -> still UNVERIFIED; raw Mall file stays gitignored, results store only standardized coordinates (clustering_labels.csv). Replaced deprecated use_container_width with width='stretch'.
 - 2026-10-15 (Day 6): run_all.py (per-step subprocess + timeout; --quick writes to results_quick/ via ARENA_RESULTS_DIR so it never touches real results; removed the old *_quick suffix mechanism), make_leaderboards.py, README, docs/REPORT.md (all numbers from results/, checked against CSVs; corrected 3 over-statements found while re-checking), VIVA_PREP section G.
+- 2026-10-15 (Day 7): full run_all.py = 554 s; reproducibility diff on 29 CSVs OK (<=1e-9, timing excluded); notebooks 01-07 re-executed on final results; REPORT fit-time numbers updated (xgb 2.1 s vs gb 51.2 s); DATASETS.md verification table + EXPERIMENT_DESIGN section 10 deviations added; ACCEPTANCE_CRITERIA ticked with verification log. Tagged v1.0.
