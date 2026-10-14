@@ -7,7 +7,10 @@ how reliable they are when data gets harder (noise, missing features, class imba
 clean data stay the best when the data degrades?
 
 ## Status
-Planning complete; implementation in progress (see `docs/PLAN.md`).
+Planning complete; **no code yet, awaiting plan approval**. Start with `CLAUDE.md`, then `docs/STATUS.md`.
+
+## Documentation
+`docs/PRD.md` (vision, hypotheses) · `docs/PLAN.md` (7-day roadmap) · `docs/EXPERIMENT_DESIGN.md` (algorithms, metrics, perturbations) · `docs/ARCHITECTURE.md` · `docs/DATASETS.md` · `docs/SYLLABUS_MAP.md` · `docs/ACCEPTANCE_CRITERIA.md` · `docs/RISKS.md` · `docs/VIVA_PREP.md`
 
 ## Planned datasets
 | Task | Dataset |
