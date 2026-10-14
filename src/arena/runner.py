@@ -23,7 +23,6 @@ def run_baseline(task, quick=False, models=None, seeds=None):
                 preds[f"{m}_pred"] = res.pred
                 if res.proba is not None:
                     preds[f"{m}_proba"] = res.proba
-    suffix = "_quick" if quick else ""
-    pd.DataFrame(rows).to_csv(RAW_DIR / f"{task}_baseline{suffix}.csv", index=False)
-    preds.to_csv(PRED_DIR / f"{task}_predictions_seed0{suffix}.csv", index=False)
+    pd.DataFrame(rows).to_csv(RAW_DIR / f"{task}_baseline.csv", index=False)
+    preds.to_csv(PRED_DIR / f"{task}_predictions_seed0.csv", index=False)
     return pd.DataFrame(rows)

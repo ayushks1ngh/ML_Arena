@@ -1,9 +1,11 @@
 """Central settings. Everything random in the project is driven by SEEDS."""
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_RAW = ROOT / "data" / "raw"
-RESULTS = ROOT / "results"
+# ARENA_RESULTS_DIR lets `run_all.py --quick` write to a separate folder so it never overwrites the real results
+RESULTS = Path(os.environ.get("ARENA_RESULTS_DIR", ROOT / "results"))
 RAW_DIR, SUMMARY_DIR = RESULTS / "raw", RESULTS / "summary"
 PRED_DIR, FIG_DIR = RESULTS / "predictions", RESULTS / "figures"
 

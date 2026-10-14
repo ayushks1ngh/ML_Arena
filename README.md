@@ -1,23 +1,59 @@
 # ML Arena: Machine Learning Benchmarking & Reliability Lab
 
-Compares ML algorithms across classification, regression and clustering, then tests
-how reliable they are when data gets harder (noise, missing features, class imbalance).
+Compares ML algorithms across classification, regression and clustering, then tests how reliable they are when data gets harder (noise, missing features, class imbalance). Includes a failure investigator, an interactive Streamlit dashboard, and a set of syllabus labs.
 
-**Central question:** Which algorithms perform best per task, and does the best model on
-clean data stay the best when the data degrades?
+**Central question:** Which algorithms perform best per task, and does the best model on clean data stay the best when the data degrades?
 
-## Status
-Planning complete; **no code yet, awaiting plan approval**. Start with `CLAUDE.md`, then `docs/STATUS.md`.
+## Headline results (5 seeds; full details in `docs/REPORT.md`)
+| Task | Dataset | Best on clean data | Note |
+|---|---|---|---|
+| Classification | Titanic | XGBoost, macro-F1 0.834 ± 0.017 | Random Forest (0.828) and Decision Tree (0.825) are within 1 std: ties |
+| Regression | California Housing | XGBoost, RMSE 0.449 ± 0.008 | gaps exceed std; ordering XGB > GB > RF > Tree > Linear |
+| Clustering | Mall Customers | K-means k=5, silhouette 0.555 | most stable under noise; single linkage chains (k=2) |
+
+The clean-data winner is **not** the most robust: a different model is #1 in 13 of 16 classification and 9 of 10 regression perturbation cells. Hypothesis verdicts (H1-H6) are in `docs/REPORT.md` and `results/summary/hypotheses.csv`; some hypotheses were **not** supported.
+
+## Setup
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+Data (not committed): Titanic and Mall Customers come from Kaggle; California Housing downloads automatically via scikit-learn.
+```bash
+# needs ~/.kaggle/kaggle.json (and accepting the Titanic competition rules on kaggle.com once)
+mkdir -p data/raw/titanic data/raw/mall
+kaggle competitions download -c titanic -p data/raw/titanic && unzip -o data/raw/titanic/titanic.zip -d data/raw/titanic
+kaggle datasets download -d vjchoudhary7/customer-segmentation-tutorial-in-python -p data/raw/mall && unzip -o data/raw/mall/*.zip -d data/raw/mall
+python scripts/check_env.py        # verifies imports and data
+```
+If `data/raw/titanic/train.csv` is missing the loader falls back to OpenML.
+
+## Usage
+| Command | What it does |
+|---|---|
+| `python scripts/run_all.py` | Regenerates every result in `results/` (5 seeds, tuned; ~20-30 min) |
+| `python scripts/run_all.py --quick` | Smoke test (2 seeds, no tuning, ~1.5 min) writing to `results_quick/` |
+| `python scripts/run_all.py --only robustness-clf` | Run selected steps (names: classification, regression, leaderboards, robustness-clf, robustness-reg, clustering, failures+hypotheses) |
+| `streamlit run app/Home.py` | Interactive dashboard (reads `results/` only) |
+| `pytest` | 24 tests: leakage, perturbations, metrics, ID3, dashboard pages |
+
+## Structure
+```
+src/arena/   data, preprocess, models, evaluate, perturb, robustness, clustering, failures, hypotheses, id3, summarize
+scripts/     run_all.py + one runner per experiment, notebook builders (make_*.py)
+results/     raw/ (per-seed CSVs), summary/ (leaderboards, robustness, failures, hypotheses), predictions/, figures/
+notebooks/   01-07 experiment notebooks; syllabus/ labs A-G
+app/         Streamlit dashboard (Home + 5 pages)
+tests/       pytest suite
+docs/        PRD, PLAN, EXPERIMENT_DESIGN, ARCHITECTURE, DATASETS, SYLLABUS_MAP, ACCEPTANCE_CRITERIA, RISKS, REPORT, VIVA_PREP, STATUS
+```
+
+## Syllabus coverage
+Main platform: Decision Tree, **ID3 (own implementation)**, kNN, Nearest Centroid, ANN, Random Forest, AdaBoost, **XGBoost**, Linear/DT/RF/GB/XGB regression, K-means, Mean Shift, single linkage, DBSCAN.
+Labs (`notebooks/syllabus/`): A regression types, B activation functions, C ML vs MAP, D NAND perceptron, E Q-learning, F Manhattan/Chebyshev distances, G single-linkage calculations.
 
 ## Documentation
-`docs/PRD.md` (vision, hypotheses) · `docs/PLAN.md` (7-day roadmap) · `docs/EXPERIMENT_DESIGN.md` (algorithms, metrics, perturbations) · `docs/ARCHITECTURE.md` · `docs/DATASETS.md` · `docs/SYLLABUS_MAP.md` · `docs/ACCEPTANCE_CRITERIA.md` · `docs/RISKS.md` · `docs/VIVA_PREP.md`
+Start with `docs/REPORT.md` (findings), `docs/EXPERIMENT_DESIGN.md` (protocol), `docs/VIVA_PREP.md` (Q&A). Working notes for the AI assistant: `CLAUDE.md`, `docs/STATUS.md`.
 
-## Planned datasets
-| Task | Dataset |
-|---|---|
-| Classification | Titanic (Kaggle) |
-| Regression | California Housing (Kaggle / scikit-learn) |
-| Clustering | Mall Customer Segmentation (Kaggle) |
-
-## Planned structure
-`src/arena/` reusable modules, `scripts/` runners, `results/` CSVs, `notebooks/`, `app/` Streamlit dashboard, `tests/`, `docs/`.
+## Limitations
+Small Titanic test set (many gaps are ties); small tuning grids; Mall data is small, unlabelled and its licence is unverified; see `docs/REPORT.md` section 8.

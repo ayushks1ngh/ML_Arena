@@ -15,8 +15,6 @@ from arena.models import CLF_MODELS, REG_MODELS
 REG = CLF_MODELS if a.task == "clf" else REG_MODELS
 models = [m for m in raw.model.unique() if m != "dummy" and not REG[m].discretized]   # ID3 family works on categories: noise is undefined
 df = sweep(a.task, models, seeds, raw[raw.metric == ("f1_macro" if a.task == "clf" else "rmse")], quick=a.quick)
-suffix = "_quick" if a.quick else ""
-df.to_csv(RAW_DIR / f"robustness_{a.task}{suffix}.csv", index=False)
-if not a.quick:
-    write_summaries(a.task)
+df.to_csv(RAW_DIR / f"robustness_{a.task}.csv", index=False)
+write_summaries(a.task)
 print("wrote", len(df), "rows")

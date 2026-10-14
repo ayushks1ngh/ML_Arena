@@ -22,8 +22,7 @@ def leaderboard(raw: pd.DataFrame) -> pd.DataFrame:
     return pd.concat(out).sort_values(["metric", "rank"]).reset_index(drop=True)
 
 
-def write_leaderboard(task: str, quick: bool = False) -> pd.DataFrame:
-    suffix = "_quick" if quick else ""
-    lb = leaderboard(pd.read_csv(RAW_DIR / f"{task}_baseline{suffix}.csv"))
-    lb.to_csv(SUMMARY_DIR / f"leaderboard_{task}{suffix}.csv", index=False)
+def write_leaderboard(task: str) -> pd.DataFrame:
+    lb = leaderboard(pd.read_csv(RAW_DIR / f"{task}_baseline.csv"))
+    lb.to_csv(SUMMARY_DIR / f"leaderboard_{task}.csv", index=False)
     return lb
