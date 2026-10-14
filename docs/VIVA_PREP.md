@@ -19,7 +19,7 @@ Rules: answers here that cite numbers must be filled in from real results only (
 **Q: What does the silhouette score measure and what are its limits?** `(b-a)/max(a,b)` per point; favours convex, similar-size clusters; undefined for 1 cluster; not comparable across very different k.
 
 ## C. Algorithms (add details when implemented)
-- Decision tree / entropy / information gain / **ID3** (worked example: PlayTennis, gain(Outlook)=0.246)
+- Decision tree / entropy / information gain / **ID3** (worked example: PlayTennis, gain(Outlook)=0.247)
 - kNN (distance metrics, curse of dimensionality, scaling)
 - Nearest Centroid (relation to k-means, linear-ish boundary)
 - ANN (layers, activation functions, backprop, early stopping)

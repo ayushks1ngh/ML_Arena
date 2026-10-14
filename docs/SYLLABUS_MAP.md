@@ -6,7 +6,7 @@ Rule: benchmark-able algorithms go in the **main platform**; concepts that are n
 | Syllabus item | Where | Notes |
 |---|---|---|
 | Decision Tree | Classification + Regression arenas | sklearn (entropy for clf) |
-| **ID3** | Classification arena + `src/arena/id3.py` | Custom, categorical features after discretization; compared to sklearn entropy tree on identical inputs; PlayTennis unit test |
+| **ID3** | Classification arena + `src/arena/id3.py` | Custom, categorical features after discretization; compared to sklearn entropy tree on identical inputs; PlayTennis unit test (gain(Outlook)=0.247) |
 | kNN | Classification arena | scaling required; also tested in Lab F (distance metrics) |
 | Nearest Centroid | Classification arena | euclidean vs. manhattan |
 | ANN (fully connected) | Classification arena | sklearn `MLPClassifier`; activation study in Lab B |

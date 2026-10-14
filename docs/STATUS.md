@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-10-15
 **Mode:** AUTONOMOUS (user approved plan + told me to run Days 1-7 without confirmation).
-**Current phase:** Day 3 done (Gate 3 passed). **Next action:** Day 4 (imbalance analysis/H1-H6 verdicts, ID3, failures.py + notebook 06, syllabus labs D/F/G).
+**Current phase:** Day 4 done (Gate 4 passed). **Next action:** Day 5 (Streamlit dashboard + labs A, B, C, E).
 
 ## Phase checklist
 - [x] Repo scaffold (README, .gitignore, initial PLAN)
@@ -11,7 +11,7 @@
 - [x] Day 1 — Setup, data, skeleton (Gate 1: 5 tests pass; quick run wrote results/raw/clf_baseline_quick.csv)
 - [x] Day 2 — Leaderboards clf + reg (Gate 2: 8 clf models (ID3 added Day 4) + 6 reg models x 5 seeds, all beat dummy, 6 tests pass)
 - [x] Day 3 — Robustness engine + clustering (Gate 3: 12 tests pass; refit baselines reproduce tuned ones exactly; degradation monotone in severity)
-- [ ] Day 4 — Imbalance, failures, ID3, quick labs (Gate 4)
+- [x] Day 4 — Imbalance, failures, ID3, quick labs (Gate 4: 15 tests pass; ID3 PlayTennis gain(Outlook)=0.2467; hypotheses.csv has H1-H6 verdicts)
 - [ ] Day 5 — Dashboard + remaining labs (Gate 5)
 - [ ] Day 6 — README, REPORT, viva, fresh-clone test (Gate 6)
 - [ ] Day 7 — Buffer, full run, final polish
@@ -42,3 +42,4 @@
 - 2026-10-15 (Day 1): Kaggle API worked (titanic comp + vjchoudhary7/customer-segmentation-tutorial-in-python). Data in data/raw/ (gitignored). Titanic 891x12, Mall 200x5, California 20640x8 all verified. Deps pinned in requirements.txt (pandas 3.0, sklearn 1.9, xgboost 3.4). Built config/data/preprocess/models/evaluate + check_env + run_classification + notebook 01 + tests. Design: GridSearchCV over full Pipeline(pre, est) then split fitted steps, so tuning is leak-free and perturbation can act between pre and est. Mall licence still to check (Day 6 report).
 - 2026-10-15 (Day 2): added knn/nc/ann/ada/xgb + reg models, runner.py, summarize.py, viz.py, notebooks 02/03 (executed), seed-0 predictions saved. Full runs: clf ~2 min, reg ~10 min. Measured: clf macro-F1 best=xgb 0.834+-0.017 (rf, dt tie within 1 std); reg RMSE best=xgb 0.449 (gb 0.465, rf 0.503). Quick-run outputs are gitignored.
 - 2026-10-15 (Day 3): perturb.py, importance.py (grouped permutation importance), robustness.py (+summaries: robustness_summary/rank_stability/ranks), clustering.py, notebooks 04/05 executed. Imbalance (clf) was built into the robustness sweep (retrains with same hyperparameters). Observations (not yet formal verdicts): clf top-1 changes under almost every perturbation (xgb baseline winner; rf wins noise/missing; nc/dt/ann win some); NC loses least under imbalance/noise but has the lowest baseline; reg: linear least hurt by noise, boosted trees (xgb/gb) hurt most. Clustering: single linkage selects k=2 (chaining), k-means most stable (ARI .95->.50 as sigma .1->.5), single-linkage ARI erratic. ID3 NOT yet in clf arena or robustness (Day 4). Decision: drop_feature ablates whole original features (all one-hot columns) ranked by grouped permutation importance of RF on TRAIN rows.
+- 2026-10-15 (Day 4): added ID3 (src/arena/id3.py) + Discretizer; `id3` and `dt_disc` (sklearn entropy tree on the same discretized features) are in the clf arena but EXCLUDED from robustness (noise on integer categories is undefined). Reran clf baseline: other models' numbers unchanged (max diff 0). Added robustness family `imbalance_matched` (test set skewed like train) because H4 was Not supported under balanced test: accuracy falls too. Under matched skew accuracy rises 6-9 pts while minority recall falls 30-70 pts, so H4 Supported only in that protocol (report both). Verdicts (hypotheses.csv): H1 Supported (clf+reg; xgb baseline winner displaced, rf mostly), H2 Not supported, H3 Not supported (NC/kNN among least affected), H5 clf Supported / reg Not supported (rho=-0.97, n=5), H6 Supported. failures.py wrote failures_*.csv + tradeoff_*.csv. Notebooks 06, 07, labs D/F/G executed. Doc fix: PlayTennis gain(Outlook)=0.247 (not 0.246).

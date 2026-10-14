@@ -27,7 +27,7 @@ Time budget assumes ~6–8 focused hours/day. Order is deliberate: core results 
 - `run_imbalance.py`; macro-F1 vs. accuracy analysis.
 - `id3.py` + test + comparison; `failures.py` + notebook 06.
 - Syllabus labs D (NAND), F (distances), G (single linkage) — the quick ones.
-- **Gate 4:** H1–H6 each have computed evidence in a results table (verdicts may be "inconclusive"); ID3 test passes (gain(Outlook)=0.246); failure tables generated.
+- **Gate 4:** H1–H6 each have computed evidence in a results table (verdicts may be "inconclusive"); ID3 test passes (gain(Outlook)=0.247); failure tables generated.
 
 ## Day 5 — Dashboard + remaining labs
 - Streamlit app: Home, Leaderboards, Robustness Lab, Failure Investigator, Clustering, Methodology.

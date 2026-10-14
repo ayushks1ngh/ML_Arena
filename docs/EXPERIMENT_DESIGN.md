@@ -79,7 +79,7 @@ Decide using the saved aggregate tables; report the numbers, then the verdict (S
 - **H1:** Supported if at some perturbation (family, level) the top-ranked model by primary metric ≠ baseline top model, with the gap > 1 std; Inconclusive if only within-noise flips.
 - **H2:** Supported if mean rel_change (noise family) of tree-ensemble group is less negative than kNN and ANN, in the majority of levels.
 - **H3:** Supported if kNN/NC have the largest mean relative drop under noise and under missing among all models.
-- **H4:** Supported if as minority share falls: accuracy of ≥1 model stays within ~2 points or rises while its macro-F1/minority recall drops ≥ 10 points; and rankings by accuracy vs. macro-F1 differ (Kendall τ < 1).
+- **H4:** Evaluated under TWO protocols: (a) train skewed, test balanced (`imbalance`), (b) train AND test skewed to the same share (`imbalance_matched`, simulates deployment prior = training prior). Supported if as minority share falls: accuracy of ≥1 model stays within ~2 points or rises while its macro-F1/minority recall drops ≥ 10 points; and rankings by accuracy vs. macro-F1 differ (Kendall τ < 1).
 - **H5:** Complexity proxy = number of effective parameters/leaves or a documented ordinal (1 linear/NC … 5 ensembles/ANN). Compute Spearman ρ between complexity and mean rel_change; Supported if |ρ| < 0.5 or p>0.05 (state small-n caveat: ~8 models).
 - **H6:** Supported if mean ARI(single linkage) and ARI(mean shift) < ARI(k-means) at majority of σ levels.
 

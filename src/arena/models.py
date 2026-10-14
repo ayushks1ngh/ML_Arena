@@ -10,18 +10,25 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from xgboost import XGBClassifier, XGBRegressor
 
+from .id3 import ID3Classifier
+
 
 @dataclass
 class ModelSpec:
     factory: callable                 # seed -> unfitted estimator
     grid: dict = field(default_factory=dict)   # keys WITHOUT the "est__" prefix
     complexity: int = 1               # documented ordinal 1 (simple) .. 5 (complex)
+    discretized: bool = False         # True -> uses Discretizer (integer categories) instead of scaling
 
 
 CLF_MODELS = {
     "dummy": ModelSpec(lambda s: DummyClassifier(strategy="most_frequent"), {}, 0),
     "dt": ModelSpec(lambda s: DecisionTreeClassifier(criterion="entropy", random_state=s),
                     {"max_depth": [3, 5, 8, None], "min_samples_leaf": [1, 5, 10]}, 2),
+    # ID3 and its sklearn twin run on the SAME discretized categories (isolates the algorithm, not the preprocessing)
+    "id3": ModelSpec(lambda s: ID3Classifier(), {"max_depth": [3, 5, None]}, 2, discretized=True),
+    "dt_disc": ModelSpec(lambda s: DecisionTreeClassifier(criterion="entropy", random_state=s),
+                         {"max_depth": [3, 5, None]}, 2, discretized=True),
     "knn": ModelSpec(lambda s: KNeighborsClassifier(),
                      {"n_neighbors": [3, 5, 11, 21], "weights": ["uniform", "distance"]}, 2),
     "nc": ModelSpec(lambda s: NearestCentroid(), {"metric": ["euclidean", "manhattan"]}, 1),

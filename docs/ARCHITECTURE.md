@@ -96,5 +96,5 @@ numpy, pandas, scikit-learn, xgboost, scipy, matplotlib, seaborn, plotly, stream
 - Preprocessor fitted on train only (assert no test statistics leak: fit on train vs. fit on all gives different params).
 - Perturbation functions: shapes preserved, original untouched, same seed → same output, mask fraction ≈ p, imbalance share ≈ target, test untouched.
 - `rel_change` sign convention for error vs. score metrics.
-- ID3: entropy/information-gain on a known textbook example (e.g. PlayTennis: gain(Outlook)=0.246).
+- ID3: entropy/information-gain on a known textbook example (e.g. PlayTennis: gain(Outlook)=0.247).
 - Smoke test: `run_all.py --quick` completes and produces every expected CSV.

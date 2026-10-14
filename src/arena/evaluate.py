@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 from .config import INNER_CV, TEST_SIZE
 from .data import load_california, load_titanic
 from .models import CLF_MODELS, REG_MODELS
-from .preprocess import build_preprocessor
+from .preprocess import Discretizer, build_preprocessor
 
 TASKS = {
     "clf": ("titanic", load_titanic, CLF_MODELS, "f1_macro"),
@@ -76,7 +76,7 @@ def run_one(task, model_key, seed, quick=False, data=None, fixed_params=None):
     _, _, registry, tune_metric = TASKS[task]
     spec = registry[model_key]
     Xtr, Xte, ytr, yte = data if data is not None else split(task, seed)
-    pre, n_num = build_preprocessor(Xtr)
+    pre, n_num = (Discretizer(), 0) if spec.discretized else build_preprocessor(Xtr)
     grid = {f"est__{k}": ([v[0]] if quick else v) for k, v in spec.grid.items()}
     pipe = Pipeline([("pre", pre), ("est", spec.factory(seed))])
     t0 = time.time()

@@ -7,13 +7,13 @@ import pandas as pd
 from scipy.stats import kendalltau
 
 from .config import DROP_TOP_K, MINORITY_SHARES, MISSING_FRACS, NOISE_SIGMAS, RAW_DIR, SUMMARY_DIR
-from .evaluate import HIGHER_IS_BETTER, TASKS, run_one, score, split
+from .evaluate import HIGHER_IS_BETTER, TASKS, clf_metrics, run_one, score, split
 from .importance import column_groups, grouped_permutation_importance
 from .perturb import (ablate_columns, add_noise, make_imbalanced, mask_missing, train_fill_values)
 
 METRICS = {"clf": ["accuracy", "f1_macro", "recall"], "reg": ["rmse", "mae", "r2"]}
 PRIMARY = {"clf": "f1_macro", "reg": "rmse"}
-FAMILY_CODE = {"noise": 1, "missing": 2, "drop_feature": 3, "imbalance": 4}
+FAMILY_CODE = {"noise": 1, "missing": 2, "drop_feature": 3, "imbalance": 4, "imbalance_matched": 5}
 ORIG_SHARE = 0.38      # approx. Titanic positive share; severity axis for imbalance = ORIG_SHARE - share
 
 
@@ -67,6 +67,15 @@ def sweep(task, models, seeds, baseline_raw, quick=False):
                     r2 = run_one(task, model, seed, data=(Xi, Xte, yi, yte), fixed_params=res.best_params)
                     rows += _rows(task, model, seed, "imbalance", share, base, r2.metrics,
                                   {"minority_share": share, "n_train": len(yi)})
+                    # matched variant: the TEST set is skewed the same way (deployment prior = training prior),
+                    # which is where accuracy can hide minority-class failure. Baseline = clean model on same rows.
+                    rng2 = np.random.default_rng([seed, FAMILY_CODE["imbalance_matched"], i])
+                    Xs, ys = make_imbalanced(Xte, yte, share, rng2)
+                    pos = yte.index.get_indexer(ys.index)
+                    base_m = clf_metrics(ys, res.pred[pos], res.proba[pos] if res.proba is not None else None)
+                    pert_m = clf_metrics(ys, r2.pred[pos], r2.proba[pos] if r2.proba is not None else None)
+                    rows += _rows(task, model, seed, "imbalance_matched", share, base_m, pert_m,
+                                  {"minority_share": share, "n_test": len(ys)})
             print(f"{task} seed={seed} {model} done", flush=True)
     return pd.DataFrame(rows)
 
@@ -77,7 +86,7 @@ def _fit(task, model, seed, baseline_raw, data):
 
 
 def severity(family, level):
-    return ORIG_SHARE - level if family == "imbalance" else level
+    return ORIG_SHARE - level if family.startswith("imbalance") else level
 
 
 def summarize_robustness(df, task):
@@ -91,7 +100,7 @@ def summarize_robustness(df, task):
         by_level = g.groupby("level").agg(rel=("rel_change", "mean"), base=("baseline_score", "mean"),
                                           pert=("perturbed_score", "mean")).sort_index()
         sev = np.array([0.0] + [severity(fam, l) for l in by_level.index])
-        sev = np.sort(sev) if fam != "imbalance" else sev
+        sev = sev
         ratio = (by_level.pert / by_level.base) if HIGHER_IS_BETTER[m] else (by_level.base / by_level.pert)
         curve = np.concatenate([[1.0], ratio.values])
         order = np.argsort(sev); span = sev.max() - sev.min()
