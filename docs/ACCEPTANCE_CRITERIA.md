@@ -1,11 +1,11 @@
 # Acceptance Criteria (objective, checkable)
 
 ## Reproducibility & structure
-- [ ] Fresh clone + new venv + `pip install -r requirements.txt` works (versions pinned).
-- [ ] `python scripts/run_all.py --quick` finishes and creates every CSV listed in `EXPERIMENT_DESIGN.md` §9.
+- [x] Fresh clone + new venv + `pip install -r requirements.txt` works (versions pinned).
+- [x] `python scripts/run_all.py --quick` finishes and creates every CSV listed in `EXPERIMENT_DESIGN.md` §9.
 - [ ] `python scripts/run_all.py` (full, ≥5 seeds) finishes in < ~30 min on a laptop CPU.
 - [ ] Re-running with the same seeds reproduces identical metric values (spot-check 3 rows).
-- [ ] `pytest` passes (leakage, perturbations, metrics/rel_change sign, ID3 PlayTennis gain 0.247 (0.2467) for Outlook).
+- [x] `pytest` passes (leakage, perturbations, metrics/rel_change sign, ID3 PlayTennis gain 0.247 (0.2467) for Outlook).
 
 ## Data
 - [ ] 3 datasets load; source and licence note recorded in `DATASETS.md` (VERIFY items resolved).
