@@ -70,8 +70,9 @@ class FitResult:
     predict_time: float
 
 
-def run_one(task, model_key, seed, quick=False, data=None):
-    """Tune with inner CV on the training set only, refit, score on the held-out test set."""
+def run_one(task, model_key, seed, quick=False, data=None, fixed_params=None):
+    """Tune with inner CV on the training set only, refit, score on the held-out test set.
+    If fixed_params is given, skip tuning and just fit with those hyperparameters (used by robustness)."""
     _, _, registry, tune_metric = TASKS[task]
     spec = registry[model_key]
     Xtr, Xte, ytr, yte = data if data is not None else split(task, seed)
@@ -79,7 +80,10 @@ def run_one(task, model_key, seed, quick=False, data=None):
     grid = {f"est__{k}": ([v[0]] if quick else v) for k, v in spec.grid.items()}
     pipe = Pipeline([("pre", pre), ("est", spec.factory(seed))])
     t0 = time.time()
-    if grid and not quick:
+    if fixed_params is not None:
+        params = {k: (tuple(v) if k == "hidden_layer_sizes" else v) for k, v in fixed_params.items()}
+        fitted = pipe.set_params(**{f"est__{k}": v for k, v in params.items()}).fit(Xtr, ytr)
+    elif grid and not quick:
         gs = GridSearchCV(pipe, grid, scoring=tune_metric, cv=INNER_CV, n_jobs=1)
         gs.fit(Xtr, ytr)
         fitted, params = gs.best_estimator_, {k[5:]: v for k, v in gs.best_params_.items()}

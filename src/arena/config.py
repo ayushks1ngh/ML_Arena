@@ -16,7 +16,7 @@ INNER_CV = 3
 NOISE_SIGMAS = [0.1, 0.25, 0.5, 1.0]        # in std units of standardized features
 MISSING_FRACS = [0.1, 0.2, 0.3, 0.5]
 DROP_TOP_K = [1, 2]
-MINORITY_SHARES = [None, 0.20, 0.10, 0.05]  # None = original class balance
+MINORITY_SHARES = [0.20, 0.10, 0.05]        # minority share of the (re)sampled TRAIN set; original ~0.38 is the baseline
 
 for d in (RAW_DIR, SUMMARY_DIR, PRED_DIR, FIG_DIR):
     d.mkdir(parents=True, exist_ok=True)

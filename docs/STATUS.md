@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-10-15
 **Mode:** AUTONOMOUS (user approved plan + told me to run Days 1-7 without confirmation).
-**Current phase:** Day 2 done (Gate 2 passed). **Next action:** Day 3 (perturb.py, robustness.py, clustering.py, notebooks 04/05).
+**Current phase:** Day 3 done (Gate 3 passed). **Next action:** Day 4 (imbalance analysis/H1-H6 verdicts, ID3, failures.py + notebook 06, syllabus labs D/F/G).
 
 ## Phase checklist
 - [x] Repo scaffold (README, .gitignore, initial PLAN)
@@ -10,7 +10,7 @@
 - [x] **Plan approved by user** (autonomous mode)
 - [x] Day 1 — Setup, data, skeleton (Gate 1: 5 tests pass; quick run wrote results/raw/clf_baseline_quick.csv)
 - [x] Day 2 — Leaderboards clf + reg (Gate 2: 8 clf models (ID3 added Day 4) + 6 reg models x 5 seeds, all beat dummy, 6 tests pass)
-- [ ] Day 3 — Robustness engine + clustering (Gate 3)
+- [x] Day 3 — Robustness engine + clustering (Gate 3: 12 tests pass; refit baselines reproduce tuned ones exactly; degradation monotone in severity)
 - [ ] Day 4 — Imbalance, failures, ID3, quick labs (Gate 4)
 - [ ] Day 5 — Dashboard + remaining labs (Gate 5)
 - [ ] Day 6 — README, REPORT, viva, fresh-clone test (Gate 6)
@@ -41,3 +41,4 @@
 - 2026-10-15: Planning docs created. Nothing implemented. Resume by reading `CLAUDE.md` → this file → `PLAN.md`.
 - 2026-10-15 (Day 1): Kaggle API worked (titanic comp + vjchoudhary7/customer-segmentation-tutorial-in-python). Data in data/raw/ (gitignored). Titanic 891x12, Mall 200x5, California 20640x8 all verified. Deps pinned in requirements.txt (pandas 3.0, sklearn 1.9, xgboost 3.4). Built config/data/preprocess/models/evaluate + check_env + run_classification + notebook 01 + tests. Design: GridSearchCV over full Pipeline(pre, est) then split fitted steps, so tuning is leak-free and perturbation can act between pre and est. Mall licence still to check (Day 6 report).
 - 2026-10-15 (Day 2): added knn/nc/ann/ada/xgb + reg models, runner.py, summarize.py, viz.py, notebooks 02/03 (executed), seed-0 predictions saved. Full runs: clf ~2 min, reg ~10 min. Measured: clf macro-F1 best=xgb 0.834+-0.017 (rf, dt tie within 1 std); reg RMSE best=xgb 0.449 (gb 0.465, rf 0.503). Quick-run outputs are gitignored.
+- 2026-10-15 (Day 3): perturb.py, importance.py (grouped permutation importance), robustness.py (+summaries: robustness_summary/rank_stability/ranks), clustering.py, notebooks 04/05 executed. Imbalance (clf) was built into the robustness sweep (retrains with same hyperparameters). Observations (not yet formal verdicts): clf top-1 changes under almost every perturbation (xgb baseline winner; rf wins noise/missing; nc/dt/ann win some); NC loses least under imbalance/noise but has the lowest baseline; reg: linear least hurt by noise, boosted trees (xgb/gb) hurt most. Clustering: single linkage selects k=2 (chaining), k-means most stable (ARI .95->.50 as sigma .1->.5), single-linkage ARI erratic. ID3 NOT yet in clf arena or robustness (Day 4). Decision: drop_feature ablates whole original features (all one-hot columns) ranked by grouped permutation importance of RF on TRAIN rows.
