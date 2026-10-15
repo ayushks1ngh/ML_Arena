@@ -2,25 +2,65 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import streamlit as st
-from common import ROOT, header
+from common import ROOT, glossary_expander, header
 
-header("Methodology", "How the experiments were run, and what the limits are.")
-st.markdown("""
-**Protocol.** 5 seeds; per seed an 80/20 split (stratified for classification) shared by all models; inner 3-fold CV tuning on the
-training set only with small comparable grids; preprocessing (impute, scale, one-hot) fitted on train only; mean ± std reported,
-differences below one std are flagged as ties.
+header("Methodology 📋", "How we kept the contest fair, what the limits are, and where to find things in the repo.")
+st.markdown("## How we kept it fair")
+a, b = st.columns(2)
+with a:
+    st.markdown("""
+**✅ Same exam for everyone**
+Each model gets the identical train/test split in every repeat.
 
-**Robustness.** Noise, missing values and top-feature removal perturb the **test set** of a fixed trained model; class imbalance
-perturbs the **train set** (model retrained with the same hyperparameters), with an extra variant where the test set is skewed too.
-`rel_change` is oriented so negative = worse for every metric.
+**✅ No peeking (no data leakage)**
+Averages, scalers and encoders are learned from *training* data only. Settings are tuned with cross-validation *inside* the training data.
 
-**Datasets.** Titanic (891 rows), California Housing (20,640 rows, target capped at 5.0), Mall Customers (200 rows, no labels).
-
-**Limitations.** Small Titanic test set (~179 rows): many gaps are within noise. Mall data is small and has no ground truth.
-Complexity vs. robustness uses a coarse ordinal over 5-7 models. Only default-style small grids were searched.
+**✅ Repeated 5 times**
+Five different random seeds. We report the average and the wobble, and call it a **tie** when the gap is smaller than the wobble.
 """)
+with b:
+    st.markdown("""
+**✅ Damage the test set, not the training set**
+Noise, missing values and lost columns are applied to the *test* data of an already-trained model (like a deployed model meeting messy real data). The exception is *class imbalance*, which changes the training data and retrains.
+
+**✅ Everything reproducible**
+Every random step has a seed. `python scripts/run_all.py` regenerates every number on this dashboard.
+
+**✅ No invented numbers**
+The dashboard only *reads* result files; it computes nothing by hand.
+""")
+
+st.markdown("## Datasets")
+st.table({"Dataset": ["Titanic", "California Housing", "Mall Customers"], "Task": ["Classification", "Regression", "Clustering"],
+          "Size": ["891 passengers", "20,640 neighbourhoods", "200 customers"],
+          "Target": ["survived (0/1)", "median house value (capped at $500k)", "none"]})
+
+st.markdown("## Honest limitations")
+st.warning("""
+- Titanic's test set is only ~179 passengers, so many model gaps are within random wobble (flagged as ties).
+- Mall Customers is small and has no ground truth, so cluster quality is judged indirectly.
+- Only small tuning grids were searched; a bigger search might change rankings.
+- 'Complexity vs. robustness' compares only 5-7 models per task, so that result is weak evidence.
+""")
+
+st.markdown("## 🗺️ Map of the repository")
+st.code("""app/        this dashboard (Home + pages). Only reads CSVs from results/
+src/arena/  the actual science:
+              data.py, preprocess.py   load + clean data (leak-free)
+              models.py, id3.py        the algorithms (ID3 written from scratch)
+              evaluate.py              scoring
+              perturb.py, robustness.py  the 'make data harder' experiments
+              failures.py, hypotheses.py error analysis + hypothesis verdicts
+              clustering.py            K-means, Mean Shift, single linkage, DBSCAN
+scripts/    run_all.py regenerates every result; one runner per experiment
+results/    raw/ per-seed CSVs, summary/ tables the dashboard reads, figures/
+notebooks/  step-by-step notebooks 01-07, plus syllabus/ labs A-G
+docs/       REPORT.md (findings), EXPERIMENT_DESIGN.md (protocol), VIVA_PREP.md (Q&A)
+tests/      pytest suite (leakage, perturbations, dashboard pages)""", language="text")
+st.markdown("**Suggested reading order for newcomers:** this dashboard → `docs/REPORT.md` → `notebooks/01_*.ipynb` → `src/arena/`.")
+glossary_expander()
 for name in ("REPORT.md", "EXPERIMENT_DESIGN.md"):
     f = ROOT / "docs" / name
     if f.exists():
-        with st.expander(f"docs/{name}", expanded=(name == "REPORT.md")):
+        with st.expander(f"📄 Full document: docs/{name}"):
             st.markdown(f.read_text())

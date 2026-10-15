@@ -34,3 +34,11 @@ def test_clustering_feature_sets():
     at = _run("4_Clustering.py")
     at.sidebar.radio[0].set_value("3d").run()
     assert not at.exception, [e.value for e in at.exception]
+
+
+def test_learn_playground_overfitting_demo():
+    at = _run("0_Learn_the_Basics.py")
+    at.radio[0].set_value("Decision Tree").run()
+    at.slider[0].set_value(20).run()          # max depth 20 -> memorises training dots
+    assert not at.exception, [e.value for e in at.exception]
+    assert any("Overfitting" in w.value for w in at.warning)

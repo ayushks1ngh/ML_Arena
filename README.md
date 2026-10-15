@@ -13,6 +13,9 @@ Compares ML algorithms across classification, regression and clustering, then te
 
 The clean-data winner is **not** the most robust: a different model is #1 in 13 of 16 classification and 9 of 10 regression perturbation cells. Hypothesis verdicts (H1-H6) are in `docs/REPORT.md` and `results/summary/hypotheses.csv`; some hypotheses were **not** supported.
 
+## New here? Start with the dashboard
+`streamlit run app/Home.py` opens a guided tour: what the project is, a live "overfitting" playground (*Learn the Basics*), and every result explained in plain English. No ML background needed.
+
 ## Setup
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
@@ -34,7 +37,7 @@ If `data/raw/titanic/train.csv` is missing the loader falls back to OpenML.
 | `python scripts/run_all.py` | Regenerates every result in `results/` (5 seeds, tuned; ~20-30 min) |
 | `python scripts/run_all.py --quick` | Smoke test (2 seeds, no tuning, ~1.5 min) writing to `results_quick/` |
 | `python scripts/run_all.py --only robustness-clf` | Run selected steps (names: classification, regression, leaderboards, robustness-clf, robustness-reg, clustering, failures+hypotheses) |
-| `streamlit run app/Home.py` | Interactive dashboard (reads `results/` only) |
+| `streamlit run app/Home.py` | Beginner-friendly interactive dashboard: explains the project, has a live playground, plain-English takeaways (reads `results/` only) |
 | `pytest` | 24 tests: leakage, perturbations, metrics, ID3, dashboard pages |
 
 ## Structure
@@ -43,7 +46,7 @@ src/arena/   data, preprocess, models, evaluate, perturb, robustness, clustering
 scripts/     run_all.py + one runner per experiment, notebook builders (make_*.py)
 results/     raw/ (per-seed CSVs), summary/ (leaderboards, robustness, failures, hypotheses), predictions/, figures/
 notebooks/   01-07 experiment notebooks; syllabus/ labs A-G
-app/         Streamlit dashboard (Home + 5 pages)
+app/         Streamlit dashboard (Home + Learn the Basics + 5 result pages)
 tests/       pytest suite
 docs/        PRD, PLAN, EXPERIMENT_DESIGN, ARCHITECTURE, DATASETS, SYLLABUS_MAP, ACCEPTANCE_CRITERIA, RISKS, REPORT, VIVA_PREP, STATUS
 ```
